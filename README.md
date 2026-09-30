@@ -1,75 +1,45 @@
-# React + TypeScript + Vite
+# 🌍 REST Countries API with Color Theme Switcher
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A responsive web application that fetches and displays detailed information about countries using the [REST Countries API](https://restcountries.com/). Built as a solution for the [Front End Mentor](https://www.frontendmentor.io/) challenge using modern frontend tools.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🛠️ Tech Stack
 
-## React Compiler
+This project is built with the following technologies:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **[React.js](https://react.dev/)** — UI Component Library
+- **[TypeScript](https://www.typescriptlang.org/)** — Type-Safe JavaScript Superscript
+- **[Zustand](https://zustand-demo.pmnd.rs/)** — Lightweight State Management & API Store
+- **[Tailwind CSS](https://tailwindcss.com/)** — Utility-First CSS Framework for Dynamic Styling & Dark Mode
+- **[REST Countries API](https://restcountries.com/)** — Country Data Source
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## ✨ Features
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **🔍 Live Search:** Search for any country by its common or official name in real time.
+- **🗺️ Filter by Region:** Filter countries by continent (Africa, Americas, Asia, Europe, Oceania).
+- **📄 Detailed Country Page:** View comprehensive information including population, region, capital, native name, currencies, languages, and border countries.
+- **🌙 Theme Switching:** Seamlessly toggle between Light Mode and Dark Mode with persistent user preference.
+- **📱 Responsive Layout:** Optimized for mobile, tablet, and desktop screens.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 🚀 Getting Started
 
-```
+Follow these steps to run the project locally on your machine:
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+### 1. Prerequisites
+Make sure you have [Node.js](https://nodejs.org/) installed on your machine.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 2. Clone the Repository
+```bash
+git clone [https://github.com/AbdulRahman-Kreit/Countries.git](https://github.com/AbdulRahman-Kreit/Countries.git)
+cd Countries
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 3. Install Dependencies
+npm install
 
-```
+### 4. Start the Development Server
+npm run dev
