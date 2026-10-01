@@ -1,34 +1,40 @@
 import { create } from "zustand";
 import { fetchData } from "../lib/fetchData";
 
-export interface Country {
-    alpha3Code: string; 
-    name: string;       
+export interface APICountry {
+    uuid: string;
+    names: {
+        common: string;
+        official?: string;
+    };
+    codes?: {
+        alpha_2?: string;
+        alpha_3?: string;
+    };
     population: number;
     region: string;
-    capital?: string;   
-    flags: {
-        png: string;
-        svg: string;
+    capitals?: Array<{
+        name?: string;
+    }>;
+    flag?: {
+        svg?: string;
+        png?: string;
     };
-    flag?: string;
-    borders?: string[];
 }
 
 interface CountryStore {
-    countries: Country[],
-    filteredCountries: Country[];
-    isLoading: boolean,
-    error: string | null,
-    searchQuery: string,
-    selectedRegion: string,
-    isDarkMode: boolean,
+    countries: APICountry[];
+    filteredCountries: APICountry[];
+    isLoading: boolean;
+    error: string | null;
+    searchQuery: string;
+    selectedRegion: string;
+    isDarkMode: boolean;
 
-    fetchCountry: () => Promise<void>,    
-    toggleTheme: () => void,
-    initTheme: () => void,
-    
-};
+    fetchCountry: () => Promise<void>;
+    toggleTheme: () => void;
+    initTheme: () => void;
+}
 
 export const useCountryStore = create<CountryStore>((set, get) => ({
     countries: [],
@@ -42,22 +48,27 @@ export const useCountryStore = create<CountryStore>((set, get) => ({
     fetchCountry: async () => {
         set({ isLoading: true, error: null });
 
-        const rawData = await fetchData();
+        try {
+            const rawData = await fetchData();
 
-        const countriesList = Array.isArray(rawData) 
-            ? rawData 
-            : (rawData?.data || rawData?.countries || []);
+            const countriesList: APICountry[] = rawData?.data?.objects || [];
 
-        if (countriesList.length > 0) {
+            if (countriesList.length > 0) {
+                set({
+                    countries: countriesList,
+                    filteredCountries: countriesList,
+                    isLoading: false,
+                    error: null,
+                });
+            } else {
+                set({
+                    error: "No country data found!",
+                    isLoading: false,
+                });
+            }
+        } catch (err: any) {
             set({
-                countries: countriesList,
-                filteredCountries: countriesList,
-                isLoading: false,
-                error: null,
-            });
-        } else {
-            set({
-                error: "Country loading had failed!",
+                error: "Failed to fetch country data.",
                 isLoading: false,
             });
         }
@@ -77,7 +88,6 @@ export const useCountryStore = create<CountryStore>((set, get) => ({
 
     initTheme: () => {
         const savedTheme = localStorage.getItem('theme');
-
         const isDark = savedTheme ? savedTheme === 'dark' : true;
         set({ isDarkMode: isDark });
 
@@ -87,6 +97,4 @@ export const useCountryStore = create<CountryStore>((set, get) => ({
             document.documentElement.classList.remove('dark');
         }
     },
-
-    
 }));

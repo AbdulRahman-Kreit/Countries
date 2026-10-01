@@ -25,7 +25,7 @@ export default function Home() {
                         <LoadingSpinner />
                     </div>
                 )}
-                
+
                 {!loading && error && (
                     <div className="text-center py-10 text-red-500 font-semibold text-lg">
                         {error}
@@ -34,17 +34,22 @@ export default function Home() {
 
                 {!loading && !error && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 w-full">
-                        {filteredCountries.map((country) => (
-                            <CountryCard 
-                                key={country.alpha3Code}
-                                alpha3Code={country.alpha3Code}
-                                flag={country.flags?.svg || country.flag}
-                                name={country.name}
-                                population={country.population}
-                                region={country.region}
-                                capital={country.capital}
-                            />
-                        ))}
+                        {filteredCountries.map((country) => {
+                            const alpha2 = country.codes?.alpha_2?.toLowerCase();
+                            const flagUrl = country.flag?.svg || (alpha2 ? `https://flagcdn.com/${alpha2}.svg` : '');
+
+                            return (
+                                <CountryCard 
+                                    key={country.uuid}
+                                    uuid={country.uuid}
+                                    flag={flagUrl}
+                                    name={country.names?.common || 'Unknown'}
+                                    population={country.population}
+                                    region={country.region}
+                                    capital={country.capitals?.[0]?.name ?? 'N/A'}
+                                />
+                            );
+                        })}
                     </div>
                 )}
             </div>
