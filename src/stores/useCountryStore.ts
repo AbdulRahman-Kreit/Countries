@@ -1,19 +1,17 @@
 import { create } from "zustand";
+import { fetchData } from "../lib/fetchData";
 
 export interface Country {
-    cca3: string;
-    name: {
-        common: string;
-        official?: string;
-    };
+    alpha3Code: string; 
+    name: string;       
     population: number;
     region: string;
-    capital?: string[];
+    capital?: string;   
     flags: {
         png: string;
         svg: string;
-        alt?: string;
     };
+    flag?: string;
     borders?: string[];
 }
 
@@ -26,8 +24,10 @@ interface CountryStore {
     selectedRegion: string,
     isDarkMode: boolean,
 
+    fetchCountry: () => Promise<void>,    
     toggleTheme: () => void,
     initTheme: () => void,
+    
 };
 
 export const useCountryStore = create<CountryStore>((set, get) => ({
@@ -38,6 +38,30 @@ export const useCountryStore = create<CountryStore>((set, get) => ({
     searchQuery: '',
     selectedRegion: '',
     isDarkMode: true,
+
+    fetchCountry: async () => {
+        set({ isLoading: true, error: null });
+
+        const rawData = await fetchData();
+
+        const countriesList = Array.isArray(rawData) 
+            ? rawData 
+            : (rawData?.data || rawData?.countries || []);
+
+        if (countriesList.length > 0) {
+            set({
+                countries: countriesList,
+                filteredCountries: countriesList,
+                isLoading: false,
+                error: null,
+            });
+        } else {
+            set({
+                error: "Country loading had failed!",
+                isLoading: false,
+            });
+        }
+    },
 
     toggleTheme: () => {
         const switchMode = !get().isDarkMode;
@@ -63,4 +87,6 @@ export const useCountryStore = create<CountryStore>((set, get) => ({
             document.documentElement.classList.remove('dark');
         }
     },
+
+    
 }));

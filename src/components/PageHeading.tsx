@@ -13,8 +13,8 @@ export default function PageHeading() {
 
   return (
     <header className="w-full shadow-md bg-(--elements-color) transition-colors duration-200">
-      <div className="max-w-7xl mx-auto px-4 py-6 flex flex-row justify-between items-center">
-        <h2 className="text-lg md:text-xl font-bold">
+      <div className="max-w-[1600px] mx-auto px-4 py-6 flex flex-row justify-between items-center">
+        <h2 className="text-lg md:text-xl lg:text-2xl font-bold">
           Where in the world?
         </h2>
 
