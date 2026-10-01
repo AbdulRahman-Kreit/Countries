@@ -25,6 +25,9 @@ interface CountryStore {
     searchQuery: string,
     selectedRegion: string,
     isDarkMode: boolean,
+
+    toggleTheme: () => void,
+    initTheme: () => void,
 };
 
 export const useCountryStore = create<CountryStore>((set, get) => ({
@@ -35,4 +38,29 @@ export const useCountryStore = create<CountryStore>((set, get) => ({
     searchQuery: '',
     selectedRegion: '',
     isDarkMode: true,
+
+    toggleTheme: () => {
+        const switchMode = !get().isDarkMode;
+        set({ isDarkMode: switchMode });
+
+        localStorage.setItem('theme', switchMode ? 'dark' : 'light');
+        if (switchMode) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    },
+
+    initTheme: () => {
+        const savedTheme = localStorage.getItem('theme');
+
+        const isDark = savedTheme ? savedTheme === 'dark' : true;
+        set({ isDarkMode: isDark });
+
+        if (isDark) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    },
 }));
