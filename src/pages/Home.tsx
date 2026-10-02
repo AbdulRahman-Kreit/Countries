@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useCountryStore } from '../stores/useCountryStore';
 import LoadingSpinner from '../components/LoadingSpinner';
 import PageHeading from "../components/PageHeading";
+import Controls from '../components/Controls';
 import CountryCard from "../components/CountryCard";
 
 export default function Home() {
@@ -17,6 +18,7 @@ export default function Home() {
     return (
         <main className="w-full min-h-screen">
             <PageHeading />
+            <Controls />
 
             <div className="max-w-[1600px] mx-auto px-6 py-8 w-full">
 

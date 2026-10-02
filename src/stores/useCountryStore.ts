@@ -34,6 +34,7 @@ interface CountryStore {
     fetchCountry: () => Promise<void>;
     toggleTheme: () => void;
     initTheme: () => void;
+    setSearchQuery: (query: string) => void;
 }
 
 export const useCountryStore = create<CountryStore>((set, get) => ({
@@ -74,6 +75,24 @@ export const useCountryStore = create<CountryStore>((set, get) => ({
         }
     },
 
+    setSearchQuery: (query: string) => {
+        set({ searchQuery: query });
+        const { countries, selectedRegion } = get();
+        const cleanedQuery = query.trim().toLowerCase();
+
+        const updatedList = countries.filter((country) => {
+            const commonName = country.names?.common.toLowerCase() || "";
+            const officialName = country.names?.official?.toLowerCase() || "";
+            const matchesSearch = commonName.includes(cleanedQuery) || officialName.includes(cleanedQuery);
+
+            const matchesRegion = selectedRegion === '' || country.region === selectedRegion;
+
+            return matchesSearch && matchesRegion;
+        });
+
+        set({ filteredCountries: updatedList });
+    },
+
     toggleTheme: () => {
         const switchMode = !get().isDarkMode;
         set({ isDarkMode: switchMode });
@@ -97,4 +116,6 @@ export const useCountryStore = create<CountryStore>((set, get) => ({
             document.documentElement.classList.remove('dark');
         }
     },
+
+    
 }));
