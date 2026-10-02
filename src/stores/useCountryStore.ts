@@ -32,10 +32,30 @@ interface CountryStore {
     isDarkMode: boolean;
 
     fetchCountry: () => Promise<void>;
+    setSearchQuery: (query: string) => void;
+    setSelectedRegion: (region: string) => void;
     toggleTheme: () => void;
     initTheme: () => void;
-    setSearchQuery: (query: string) => void;
 }
+
+const applyFilters = (countries: APICountry[], query: string, region: string) => {
+    const cleanedQuery = query.trim().toLowerCase();
+
+    return countries.filter((country) => {
+        const commonName = country.names?.common?.toLowerCase() || "";
+        const officialName = country.names?.official?.toLowerCase() || "";
+        
+        const matchesSearch = commonName.includes(cleanedQuery) || officialName.includes(cleanedQuery);
+
+        const matchesRegion = 
+            region === "" || 
+            region === "All Regions" || 
+            region === "All" || 
+            country.region === region;
+
+        return matchesSearch && matchesRegion;
+    });
+};
 
 export const useCountryStore = create<CountryStore>((set, get) => ({
     countries: [],
@@ -43,7 +63,7 @@ export const useCountryStore = create<CountryStore>((set, get) => ({
     isLoading: true,
     error: null,
     searchQuery: '',
-    selectedRegion: '',
+    selectedRegion: 'All Regions',
     isDarkMode: true,
 
     fetchCountry: async () => {
@@ -51,7 +71,6 @@ export const useCountryStore = create<CountryStore>((set, get) => ({
 
         try {
             const rawData = await fetchData();
-
             const countriesList: APICountry[] = rawData?.data?.objects || [];
 
             if (countriesList.length > 0) {
@@ -78,18 +97,16 @@ export const useCountryStore = create<CountryStore>((set, get) => ({
     setSearchQuery: (query: string) => {
         set({ searchQuery: query });
         const { countries, selectedRegion } = get();
-        const cleanedQuery = query.trim().toLowerCase();
+        
+        const updatedList = applyFilters(countries, query, selectedRegion);
+        set({ filteredCountries: updatedList });
+    },
 
-        const updatedList = countries.filter((country) => {
-            const commonName = country.names?.common.toLowerCase() || "";
-            const officialName = country.names?.official?.toLowerCase() || "";
-            const matchesSearch = commonName.includes(cleanedQuery) || officialName.includes(cleanedQuery);
+    setSelectedRegion: (region: string) => {
+        set({ selectedRegion: region });
+        const { countries, searchQuery } = get();
 
-            const matchesRegion = selectedRegion === '' || country.region === selectedRegion;
-
-            return matchesSearch && matchesRegion;
-        });
-
+        const updatedList = applyFilters(countries, searchQuery, region);
         set({ filteredCountries: updatedList });
     },
 
@@ -116,6 +133,4 @@ export const useCountryStore = create<CountryStore>((set, get) => ({
             document.documentElement.classList.remove('dark');
         }
     },
-
-    
 }));
