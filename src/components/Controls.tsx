@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useCountryStore } from "../stores/useCountryStore";
 import { Search, ChevronDown } from "lucide-react";
 
-const regions = ["All Regions", 'Asia', 'Africa', 'Americas', 'Europe', 'Oceania', 'Antarctic'];
+const regions = ["All Regions", "Africa", "Americas", "Asia", "Europe", "Oceania"];
 
 export default function Controls() {
   const searchQuery = useCountryStore((state) => state.searchQuery);
@@ -36,12 +36,13 @@ export default function Controls() {
   }, []);
 
   return (
-    <div className="flex flex-row justify-between items-center w-full max-w-[1600px] mx-auto my-10">
+    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-10 md:gap-4
+      w-full max-w-[1600px] mx-auto px-4 md:px-0 my-6 md:my-12">
       
       {/* Search Field */}
-      <div className="relative flex flex-row items-center justify-center m-0">
-        <label htmlFor="search" className="absolute left-3 text-(--input-text-color)">
-          <Search className="w-5 h-5" />
+      <div className="relative w-full md:w-120">
+        <label htmlFor="search" className="absolute left-8 top-1/2 -translate-y-1/2 text-(--input-text-color) cursor-pointer">
+          <Search className="w-4 h-4 md:w-5 md:h-5" />
         </label>
         <input 
           type="text" 
@@ -50,8 +51,8 @@ export default function Controls() {
           id="search"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-120 py-4 px-12 bg-(--elements-color) text-(--input-text-color) border-none 
-          focus:border-(--text-color) outline-none rounded-lg shadow-md placeholder:text-(--input-text-color) text-[16px]" 
+          className="w-full py-4 pl-18 pr-6 bg-(--elements-color) text-(--input-text-color) border-none 
+            outline-none rounded-md shadow-md placeholder:text-(--input-text-color) text-sm md:text-base transition-all" 
         />
       </div>
 
@@ -59,27 +60,31 @@ export default function Controls() {
       <div className="relative" ref={dropdownRef} title="Filter by Region">
         <button 
           onClick={toggleDropdown}
-          className="flex flex-row justify-between items-center gap-x-3 p-4 w-50 
-          bg-(--elements-color) text-(--text-color) text-[16px] font-semibold rounded-lg shadow-md 
-          cursor-pointer"
+          type="button"
+          className="flex flex-row justify-between items-center gap-x-6 py-4 px-6 w-52 
+            bg-(--elements-color) text-(--text-color) text-sm font-normal rounded-md shadow-md 
+            cursor-pointer hover:opacity-95 transition-opacity"
         >
-          {selectedRegion || "Filter by Region"} <ChevronDown />
+          <span>{selectedRegion && selectedRegion !== "All Regions" ? selectedRegion : "Filter by Region"}</span>
+          <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
         </button>
 
         {isDropdownOpen && (
-          <ul className="absolute flex flex-col w-full bg-(--elements-color) text-(--text-color) 
-          mt-2 rounded-lg font-semibold overflow-hidden shadow-lg z-10">
+          <ul className="absolute left-0 w-full bg-(--elements-color) text-(--text-color) 
+            mt-1.5 rounded-md overflow-hidden shadow-lg z-20 py-2 text-sm">
             {regions.map((region, index) => {
               return (
-                <button 
-                  key={index} 
-                  onClick={() => handleSelectRegion(region)} 
-                  className={`w-full p-3 text-left cursor-pointer transition-colors duration-200
-                    hover:bg-[#171d23]
-                    ${selectedRegion === region ? 'bg-[#171d23]' : ''}`}
-                >
-                  {region}
-                </button>
+                <li key={index}>
+                  <button 
+                    type="button"
+                    onClick={() => handleSelectRegion(region)} 
+                    className={`w-full py-2 px-6 text-left cursor-pointer transition-colors duration-150
+                      hover:bg-black/10 dark:hover:bg-white/10
+                      ${selectedRegion === region ? 'font-bold bg-black/5 dark:bg-white/5' : ''}`}
+                  >
+                    {region}
+                  </button>
+                </li>
               );
             })}
           </ul>

@@ -1,8 +1,22 @@
 import { create } from "zustand";
 import { fetchData } from "../lib/fetchData";
 
+export interface Currency {
+    code?: string;
+    name?: string;
+    symbol?: string;
+}
+
+export interface Language {
+    iso639_1?: string;
+    iso639_2?: string;
+    name?: string;
+    nativeName?: string;
+}
+
 export interface APICountry {
     uuid: string;
+    nativeName?: string;
     names: {
         common: string;
         official?: string;
@@ -13,6 +27,7 @@ export interface APICountry {
     };
     population: number;
     region: string;
+    subregion?: string;
     capitals?: Array<{
         name?: string;
     }>;
@@ -20,6 +35,11 @@ export interface APICountry {
         svg?: string;
         png?: string;
     };
+    
+    topLevelDomain?: string[]; 
+    currencies?: Currency[];   
+    languages?: Language[];   
+    borders?: string[];       
 }
 
 interface CountryStore {
